@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Maps Directions API Example</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=11">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA8QNi-gW2T8aHI6hF4-7A4s6JfV93DLk0"></script>
+    <script>
+        
+
+
+        function initMap(origin, destination) {
+            var directionsService = new google.maps.DirectionsService();
+            var directionsRenderer = new google.maps.DirectionsRenderer();
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: { lat: 53.22014012127869, lng: 63.63348821154031 },   // Начальные координаты карты
+            });
+            directionsRenderer.setMap(map);
+
+            var request = {
+                origin: origin, // Начальная точка маршрута
+                destination: destination, // Конечная точка маршрута
+                travelMode: 'DRIVING' // Режим перемещения (автомобильное движение)
+            };
+
+            directionsService.route(request, function (result, status) {
+                if (status == 'OK') {
+                    directionsRenderer.setDirections(result);
+                    var distance = result.routes[0].legs[0].distance.text; // Расстояние
+                    var duration = result.routes[0].legs[0].duration.text; // Время в пути
+                    console.log("Distance: " + distance + ", Duration: " + duration);
+                } else {
+                    console.error("Error fetching directions: " + status);
+                }
+            });
+        }
+    </script>
+</head>
+<body>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        #map {
+            height: 100%;
+        }
+    </style>
+    <div id="map"></div>
+    <script>
+         window.onload = function() {
+            // Получаем параметры из URL
+            var urlParams = new URLSearchParams(window.location.search);
+            
+            // Получаем значение параметра "параметр1"
+            var origin = urlParams.get('origin');
+            
+            // Получаем значение параметра "параметр2"
+            var destination = urlParams.get('destination');
+            initMap(origin, destination)
+        }
+    </script>
+</body>
+</html>
